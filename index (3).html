@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEHMON OS — Turizm va Mehmon Uylarini Avtomatlashtirish Tizimi</title>
+    
+    <!-- Google Fonts: Luxury Editorial Serif & Crisp Geometric Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        registan: {
+                            DEFAULT: '#0B2545',
+                            light: '#134074',
+                            dark: '#061324',
+                        },
+                        gold: {
+                            DEFAULT: '#F4B41A',
+                            light: '#FFD166',
+                            dark: '#B88109',
+                        },
+                        ivory: '#FDFBF7',
+                    },
+                    animation: {
+                        'float-slow': 'floatSlow 7s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 5s ease-in-out infinite',
+                        'scroll-line': 'scrollLine 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite',
+                    },
+                    keyframes: {
+                        floatSlow: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-14px) rotate(0.6deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+                            '50%': { opacity: '0.95', transform: 'scale(1.07)' },
+                        },
+                        scrollLine: {
+                            '0%': { transform: 'translateY(-100%)', opacity: '0' },
+                            '40%': { opacity: '1' },
+                            '100%': { transform: 'translateY(200%)', opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-primary: #134074;
+            --bg-secondary: #061324;
+            --accent-glow: rgba(244, 180, 26, 0.35);
+        }
+
+        body {
+            background-color: var(--bg-secondary);
+            color: #FDFBF7;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scroll-Triggered Color Morphing Backdrop */
+        #ambient-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: radial-gradient(circle at 52% 40%, var(--bg-primary) 0%, var(--bg-secondary) 78%);
+            transition: background 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Subtle Architectural Silk/Plaster Grain */
+        .architectural-grain {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* 3D Perspective Stage */
+        .stage-3d {
+            perspective: 1500px;
+            transform-style: preserve-3d;
+        }
+
+        .tilt-card-3d {
+            transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        /* Luxury Glassmorphism Panels */
+        .luxury-glass {
+            background: rgba(6, 19, 36, 0.52);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 209, 102, 0.18);
+            box-shadow: 0 25px 65px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(253, 251, 247, 0.12);
+        }
+
+        .luxury-glass-light {
+            background: rgba(253, 251, 247, 0.055);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 209, 102, 0.22);
+        }
+
+        /* Luminous Bukhara Gold Text */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FDFBF7 0%, #FFD166 48%, #F4B41A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Scroll Storytelling Chapter States */
+        .story-content {
+            opacity: 0.28;
+            transform: translateY(28px);
+            transition: all 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .story-section.is-active .story-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Centerpiece 3D Illustration Layer Morphing */
+        .centerpiece-layer {
+            opacity: 0;
+            transform: scale(0.88) translateY(34px) rotateY(-10deg);
+            filter: blur(8px);
+            transition: all 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+        }
+        .centerpiece-layer.active {
+            opacity: 1;
+            transform: scale(1) translateY(0px) rotateY(0deg);
+            filter: blur(0px);
+            pointer-events: auto;
+        }
+
+        /* Custom Range Slider Styling for ROI Calculator */
+        input[type="range"].luxury-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(253, 251, 247, 0.14);
+            height: 6px;
+            border-radius: 999px;
+            outline: none;
+        }
+        input[type="range"].luxury-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD166, #F4B41A);
+            border: 3px solid #061324;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(244, 180, 26, 0.65);
+            transition: transform 0.2s;
+        }
+        input[type="range"].luxury-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.18);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #061324;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #134074;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F4B41A;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-gold selection:text-registan-dark">
+
+    <!-- Dynamic Color-Morphing Backdrop & Subtle Grain -->
+    <div id="ambient-backdrop"></div>
+    <div class="architectural-grain"></div>
+
+    <!-- Ambient Golden Girih & Silk Dust Canvas -->
+    <canvas id="girih-particles-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- ===================================================================== -->
+    <!-- 1. MINIMAL FLOATING TOP NAVIGATION BAR                                -->
+    <!-- ===================================================================== -->
+    <header class="fixed top-0 left-0 right-0 z-40 transition-all duration-500 px-4 sm:px-8 lg:px-14 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between luxury-glass rounded-full px-5 sm:px-8 py-3">
+            
+            <!-- Brand Logo with Uzbek Geometric Girih Star Emblem -->
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gold-light to-gold-dark flex items-center justify-center shadow-lg shadow-gold/25 group-hover:rotate-45 transition-transform duration-500">
+                    <svg class="w-5 h-5 text-registan-dark" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L14.8 6.8L21 5.5L18.2 11.2L23 15L16.8 16.5L17.5 22.8L12 19.2L6.5 22.8L7.2 16.5L1 15L5.8 11.2L3 5.5L9.2 6.8L12 1ZM12 7.5L9.5 12L12 16.5L14.5 12L12 7.5Z"/>
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-serif text-xl sm:text-2xl font-bold tracking-wider text-ivory block leading-none">MEHMON OS</span>
+                    <span class="text-[9px] uppercase tracking-[0.28em] text-gold-light/90 block mt-0.5">Hospitality Automation</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-ivory/85">
+                <a href="#showcase-story" class="hover:text-gold-light transition-colors">Imkoniyatlar</a>
+                <a href="#modules-catalog" class="hover:text-gold-light transition-colors">Modullar</a>
+                <a href="#roi-calculator" class="hover:text-gold-light transition-colors">Kalkulyator</a>
+                <a href="#footer-contact" class="hover:text-gold-light transition-colors">Bog'lanish</a>
+            </nav>
+
+            <!-- Right Actions: Cart Drawer & Demo CTA -->
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <button onclick="toggleCart(true)" class="relative flex items-center gap-2 bg-ivory/10 hover:bg-gold hover:text-registan-dark text-ivory border border-gold/30 px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 group">
+                    <svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    <span class="hidden sm:inline">Tanlanganlar</span>
+                    <span id="cart-badge" class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold rounded-full bg-gold text-registan-dark group-hover:bg-registan-dark group-hover:text-ivory transition-colors">0</span>
+                </button>
+
+                <button onclick="openDemoQuickCart()" class="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-gold-light to-gold text-registan-dark px-4 py-2 rounded-full text-xs sm:text-sm font-bold shadow-md shadow-gold/20 hover:shadow-gold/40 transition-all">
+                    <span>Demo olish</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================================================================== -->
+    <!-- 2. FULLSCREEN HERO SHOWCASE                                           -->
+    <!-- ===================================================================== -->
+    <section id="hero" class="relative min-h-screen flex items-center pt-28 pb-16 px-4 sm:px-8 lg:px-14 overflow-hidden">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center relative z-10">
+            
+            <!-- Left Hero Editorial Typography -->
+            <div class="lg:col-span-6 text-center lg:text-left space-y-6 order-2 lg:order-1">
+                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full luxury-glass-light text-xs uppercase tracking-[0.24em] text-gold-light">
+                    <span class="w-2 h-2 rounded-full bg-gold animate-ping"></span>
+                    <span>O'zbekiston Turizmi Uchun Yagona Tizim</span>
+                </div>
+
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl xl:text-[5rem] font-semibold leading-[1.04] tracking-tight">
+                    <span class="block text-ivory">Mehmon uyingizni</span>
+                    <span class="block italic gold-gradient-text mt-1">aqlli boshqaring</span>
+                </h1>
+
+                <p class="text-base sm:text-lg text-ivory/80 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                    Samarqand, Buxoro, Xiva va tog' dam olish maskanlaridagi mehmon uylari uchun 24/7 AI konsyerj, 1-soniyada E-Mehmon registratsiya va Booking.com sinxronizatsiyasi.
+                </p>
+
+                <!-- Hero CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <a href="#showcase-story" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-gold-light via-gold to-gold-dark text-registan-dark font-bold text-sm tracking-wide shadow-xl shadow-gold/25 hover:shadow-gold/45 hover:-translate-y-0.5 transition-all duration-300 text-center">
+                        Tizimni kashf etish
+                    </a>
+                    <a href="#roi-calculator" class="w-full sm:w-auto px-8 py-4 rounded-full luxury-glass-light hover:bg-ivory/10 text-ivory font-medium text-sm tracking-wide transition-all duration-300 text-center">
+                        Foydani hisoblash
+                    </a>
+                </div>
+
+                <!-- Key Metrics Strip -->
+                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-ivory/15 max-w-md mx-auto lg:mx-0">
+                    <div>
+                        <p class="font-serif text-2xl sm:text-3xl font-bold text-gold-light">+42%</p>
+                        <p class="text-xs text-ivory/65 mt-0.5">To'g'ridan-to'g'ri bron</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-2xl sm:text-3xl font-bold text-gold-light">10 soniya</p>
+                        <p class="text-xs text-ivory/65 mt-0.5">E-Mehmon ro'yxati</p>
+                    </div>
+                    <div>
+                        <p class="font-serif text-2xl sm:text-3xl font-bold text-gold-light">0%</p>
+                        <p class="text-xs text-ivory/65 mt-0.5">Overbooking xatosi</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Hero Interactive 3D Floating Centerpiece -->
+            <div class="lg:col-span-6 flex flex-col items-center justify-center relative order-1 lg:order-2">
+                <!-- Radial Backlight Halo -->
+                <div class="absolute w-[310px] h-[310px] sm:w-[450px] sm:h-[450px] rounded-full bg-gradient-to-tr from-gold/30 via-registan-light/45 to-transparent blur-3xl animate-pulse-glow pointer-events-none"></div>
+                
+                <!-- Architectural Arch Orbit Rings -->
+                <div class="absolute w-[300px] h-[360px] sm:w-[410px] sm:h-[470px] rounded-t-full border border-gold/25 pointer-events-none"></div>
+                <div class="absolute w-[335px] h-[395px] sm:w-[450px] sm:h-[510px] rounded-t-full border border-dashed border-ivory/15 pointer-events-none"></div>
+
+                <!-- 3D Tilt Interactive Showcase Card -->
+                <div id="hero-tilt-zone" class="stage-3d relative w-full max-w-[380px] sm:max-w-[440px] aspect-[4/4.3] flex items-center justify-center cursor-grab active:cursor-grabbing">
+                    <div id="hero-tilt-card" class="tilt-card-3d w-full h-full flex items-center justify-center animate-float-slow">
+                        <div id="hero-centerpiece-svg" class="w-full h-full drop-shadow-[0_32px_50px_rgba(0,0,0,0.65)]"></div>
+                    </div>
+
+                    <!-- Floating Live Status Pill -->
+                    <div class="absolute bottom-3 right-2 sm:right-4 luxury-glass px-4 py-2.5 rounded-2xl border border-gold/35 shadow-2xl pointer-events-none">
+                        <span class="text-[10px] uppercase tracking-widest text-gold-light block">Jonli AI Konsyerj</span>
+                        <span class="font-serif text-lg font-semibold text-ivory">390 000 so'm / oyidan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animated Scroll Down Indicator -->
+        <a href="#showcase-story" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-ivory/75 hover:text-gold-light transition-colors z-20">
+            <span class="text-[11px] uppercase tracking-[0.28em] font-medium">Pastga aylantiring</span>
+            <div class="w-[1px] h-10 bg-ivory/20 relative overflow-hidden rounded-full">
+                <div class="w-full h-1/2 bg-gradient-to-b from-transparent via-gold-light to-gold animate-scroll-line"></div>
+            </div>
+        </a>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 3. SCROLL-TRIGGERED 4-CHAPTER STORYTELLING SHOWCASE                   -->
+    <!-- ===================================================================== -->
+    <section id="showcase-story" class="relative py-12 lg:py-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 lg:px-14">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Sticky Central / Left Floating 3D Stage (Desktop) -->
+                <div class="hidden lg:flex lg:col-span-6 sticky top-0 h-screen items-center justify-center">
+                    <div class="relative w-full max-w-[470px] aspect-[4/4.3] flex items-center justify-center">
+                        <!-- Dynamic Color Aura Behind Sticky 3D Device -->
+                        <div id="sticky-aura" class="absolute inset-4 rounded-full blur-3xl opacity-75 transition-all duration-1000" style="background: radial-gradient(circle, rgba(244,180,26,0.4) 0%, transparent 72%);"></div>
+                        
+                        <!-- Samarkand / Bukhara Arch Frame -->
+                        <div class="absolute inset-4 rounded-t-full border border-gold/25 pointer-events-none"></div>
+                        <div class="absolute inset-8 rounded-t-full border border-ivory/10 pointer-events-none"></div>
+
+                        <!-- 3D Tilt Stage -->
+                        <div id="sticky-tilt-zone" class="stage-3d relative w-full h-full flex items-center justify-center">
+                            <div id="sticky-tilt-card" class="tilt-card-3d w-full h-full relative flex items-center justify-center animate-float-slow">
+                                <div id="stage-visual-0" class="centerpiece-layer active absolute inset-0 flex items-center justify-center"></div>
+                                <div id="stage-visual-1" class="centerpiece-layer absolute inset-0 flex items-center justify-center"></div>
+                                <div id="stage-visual-2" class="centerpiece-layer absolute inset-0 flex items-center justify-center"></div>
+                                <div id="stage-visual-3" class="centerpiece-layer absolute inset-0 flex items-center justify-center"></div>
+                            </div>
+                        </div>
+
+                        <!-- Step Indicator Dots -->
+                        <div class="absolute -left-6 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-20">
+                            <button onclick="scrollToStory(0)" aria-label="1-bob" class="story-dot w-2.5 h-8 rounded-full bg-gold transition-all duration-300"></button>
+                            <button onclick="scrollToStory(1)" aria-label="2-bob" class="story-dot w-2.5 h-2.5 rounded-full bg-ivory/30 hover:bg-ivory/60 transition-all duration-300"></button>
+                            <button onclick="scrollToStory(2)" aria-label="3-bob" class="story-dot w-2.5 h-2.5 rounded-full bg-ivory/30 hover:bg-ivory/60 transition-all duration-300"></button>
+                            <button onclick="scrollToStory(3)" aria-label="4-bob" class="story-dot w-2.5 h-2.5 rounded-full bg-ivory/30 hover:bg-ivory/60 transition-all duration-300"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: 4 Scroll Chapters -->
+                <div id="story-sections-container" class="lg:col-span-6 space-y-16 lg:space-y-0">
+                    <!-- Chapters injected dynamically via JS -->
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 4. INTERACTIVE AUTOMATION MODULES & PRICING CATALOG                   -->
+    <!-- ===================================================================== -->
+    <section id="modules-catalog" class="relative py-24 px-4 sm:px-8 lg:px-14 border-t border-ivory/10">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header & Filter Tabs -->
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+                <div>
+                    <span class="text-xs uppercase tracking-[0.28em] text-gold-light block mb-2">Avtomatlashtirish Modullari</span>
+                    <h2 class="font-serif text-4xl sm:text-5xl font-semibold text-ivory">Mehmon uyingiz uchun <span class="italic text-gold-light">mukammal yechimlar</span></h2>
+                </div>
+
+                <!-- Filter Pills -->
+                <div id="catalog-filters" class="flex flex-wrap items-center gap-2.5">
+                    <button data-filter="all" class="filter-btn active px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold bg-gold text-registan-dark transition-all">
+                        Barchasi (6)
+                    </button>
+                    <button data-filter="booking" class="filter-btn px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium luxury-glass-light text-ivory/85 hover:text-gold-light transition-all">
+                        Bron va Sayt
+                    </button>
+                    <button data-filter="emehmon" class="filter-btn px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium luxury-glass-light text-ivory/85 hover:text-gold-light transition-all">
+                        Hujjat va E-Mehmon
+                    </button>
+                    <button data-filter="full" class="filter-btn px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium luxury-glass-light text-ivory/85 hover:text-gold-light transition-all">
+                        To'liq Boshqaruv
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Cards rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 5. INTERACTIVE ROI & TIME-SAVED SIMULATOR                             -->
+    <!-- ===================================================================== -->
+    <section id="roi-calculator" class="relative py-20 px-4 sm:px-8 lg:px-14">
+        <div class="max-w-7xl mx-auto luxury-glass rounded-3xl p-7 sm:p-12 lg:p-14 relative overflow-hidden">
+            <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-gold/15 blur-3xl pointer-events-none"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+                <!-- Left Controls -->
+                <div class="lg:col-span-6 space-y-7">
+                    <div>
+                        <span class="text-xs uppercase tracking-[0.28em] text-gold-light block mb-2">Foyda Kalkulyatori</span>
+                        <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-ivory leading-tight">
+                            Mehmon uyingiz uchun <span class="italic text-gold-light">yillik tejamkorlik</span>
+                        </h2>
+                        <p class="text-sm text-ivory/75 mt-2">
+                            Xonalar soni va o'rtacha narxni belgilang — MEHMON OS qancha komissiya va xodim vaqtini tejashini darhol ko'ring.
+                        </p>
+                    </div>
+
+                    <!-- Slider 1: Rooms -->
+                    <div class="space-y-2.5">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-ivory/80 font-medium">Xonalar soni:</span>
+                            <span id="roi-rooms-val" class="font-bold text-gold-light text-base">12 xona</span>
+                        </div>
+                        <input type="range" id="roi-rooms" min="3" max="40" value="12" class="w-full luxury-slider" oninput="calculateROI()">
+                        <div class="flex justify-between text-[11px] text-ivory/45">
+                            <span>3 xona (Oilaviy)</span>
+                            <span>20 xona (Boutique)</span>
+                            <span>40 xona (Mehmonxona)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Average Daily Rate (ADR) -->
+                    <div class="space-y-2.5">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-ivory/80 font-medium">O'rtacha kunlik xona narxi (ADR):</span>
+                            <span id="roi-adr-val" class="font-bold text-gold-light text-base">450 000 so'm</span>
+                        </div>
+                        <input type="range" id="roi-adr" min="200000" max="1500000" step="50000" value="450000" class="w-full luxury-slider" oninput="calculateROI()">
+                        <div class="flex justify-between text-[11px] text-ivory/45">
+                            <span>200 000 so'm</span>
+                            <span>800 000 so'm</span>
+                            <span>1 500 000 so'm</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 3: Occupancy % -->
+                    <div class="space-y-2.5">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-ivory/80 font-medium">O'rtacha oylik bandlik darajasi:</span>
+                            <span id="roi-occ-val" class="font-bold text-gold-light text-base">68%</span>
+                        </div>
+                        <input type="range" id="roi-occ" min="30" max="95" value="68" class="w-full luxury-slider" oninput="calculateROI()">
+                    </div>
+                </div>
+
+                <!-- Right Results Dashboard -->
+                <div class="lg:col-span-6">
+                    <div class="rounded-3xl bg-black/35 border border-gold/30 p-7 sm:p-9 space-y-6">
+                        <div class="flex items-center justify-between border-b border-ivory/10 pb-4">
+                            <span class="text-xs uppercase tracking-widest text-gold-light">Oylik Kutilayotgan Natija</span>
+                            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold">AI + E-Mehmon</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-2xl bg-ivory/5 border border-ivory/10">
+                                <span class="text-xs text-ivory/65 block">Tejalgan OTA komissiyasi (15%)</span>
+                                <span id="roi-saved-commission" class="font-serif text-2xl sm:text-3xl font-bold text-ivory mt-1 block">7 160 000 so'm</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-ivory/5 border border-ivory/10">
+                                <span class="text-xs text-ivory/65 block">Tejalgan ma'muriy vaqt</span>
+                                <span id="roi-saved-hours" class="font-serif text-2xl sm:text-3xl font-bold text-gold-light mt-1 block">86 soat / oy</span>
+                            </div>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-gradient-to-r from-gold/20 via-gold/10 to-transparent border border-gold/40">
+                            <span class="text-xs uppercase tracking-wider text-gold-light block">Qo'shimcha sof oylik foyda:</span>
+                            <span id="roi-total-profit" class="font-serif text-3xl sm:text-4xl font-bold text-ivory mt-1 block">+11 450 000 so'm</span>
+                            <span class="text-xs text-ivory/65 mt-1 block">To'g'ridan-to'g'ri bronlar o'sishi va avtomatlashtirish hisobiga</span>
+                        </div>
+
+                        <button type="button" onclick="applyROIPackage()" class="w-full py-4 px-6 rounded-full bg-gradient-to-r from-gold-light via-gold to-gold-dark text-registan-dark font-bold text-sm tracking-wide shadow-lg shadow-gold/25 hover:shadow-gold/45 hover:-translate-y-0.5 transition-all">
+                            Ushbu natija uchun tizimni tanlash
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 6. LUXURY EDITORIAL FOOTER                                            -->
+    <!-- ===================================================================== -->
+    <footer id="footer-contact" class="border-t border-ivory/10 py-14 px-4 sm:px-8 lg:px-14 text-ivory/75 text-sm">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2.5">
+                    <span class="font-serif text-2xl font-bold text-ivory tracking-wider">MEHMON OS</span>
+                </div>
+                <p class="text-xs text-ivory/65 leading-relaxed max-w-xs">
+                    O'zbekiston mehmondo'stlik an'analari va zamonaviy sun'iy intellekt texnologiyalarini birlashtiruvchi raqamli ekotizim.
+                </p>
+            </div>
+
+            <div class="space-y-2 text-xs">
+                <p class="uppercase tracking-widest text-gold-light font-semibold mb-3">Hududiy Vakolatxonalar</p>
+                <p>Samarqand: Registon ko'chasi, 14-uy (IT Park)</p>
+                <p>Buxoro: Bahouddin Naqshband ko'chasi, 42</p>
+                <p>Toshkent: Amir Temur shoh ko'chasi, 107B</p>
+            </div>
+
+            <div class="space-y-2 text-xs md:text-right">
+                <p class="uppercase tracking-widest text-gold-light font-semibold mb-3">24/7 Qo'llab-quvvatlash</p>
+                <p class="text-base font-bold text-ivory">+998 (71) 200-88-99</p>
+                <p class="text-ivory/65">Telegram: @mehmon_os_uz</p>
+                <p class="text-ivory/45 pt-3">© 2026 MEHMON OS. Barcha huquqlar himoyalangan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================================================================== -->
+    <!-- QUICK PREVIEW MODAL (Module Details & Guest House Room Tier Selector) -->
+    <!-- ===================================================================== -->
+    <div id="preview-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
+        <div class="luxury-glass bg-[#08182E] max-w-4xl w-full rounded-3xl overflow-hidden border border-gold/30 shadow-2xl relative max-h-[92vh] flex flex-col md:flex-row">
+            <!-- Close Button -->
+            <button onclick="closePreviewModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-gold hover:text-registan-dark text-ivory flex items-center justify-center transition-colors border border-ivory/15">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <!-- Left Interactive 3D Visual Preview -->
+            <div class="md:w-1/2 relative bg-gradient-to-b from-registan-light/40 to-registan-dark p-6 sm:p-8 flex flex-col items-center justify-center min-h-[300px]">
+                <div id="modal-visual-preview" class="w-64 sm:w-72 transition-transform duration-500"></div>
+                <span class="mt-3 text-[11px] uppercase tracking-widest text-gold-light/85">
+                    Real vaqt rejimida bulutli sinxronizatsiya
+                </span>
+            </div>
+
+            <!-- Right Details & Room Tier Selector -->
+            <div id="modal-details-body" class="md:w-1/2 p-6 sm:p-8 overflow-y-auto space-y-5">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- SLIDE-OVER CART / PACKAGE DRAWER & CONNECTION ORDER FORM              -->
+    <!-- ===================================================================== -->
+    <div id="cart-drawer-backdrop" onclick="toggleCart(false)" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300"></div>
+    <aside id="cart-drawer" class="fixed top-0 right-0 bottom-0 z-50 w-full max-w-md bg-[#071526] border-l border-gold/25 shadow-2xl transform translate-x-full transition-transform duration-500 ease-out flex flex-col">
+        
+        <!-- Drawer Header -->
+        <div class="px-6 py-5 border-b border-ivory/10 flex items-center justify-between">
+            <div>
+                <h3 class="font-serif text-2xl font-semibold text-ivory">Tanlangan modullar</h3>
+                <p class="text-xs text-gold-light/85 mt-0.5">Mehmon uyingiz uchun tayyor to'plam</p>
+            </div>
+            <button onclick="toggleCart(false)" class="w-9 h-9 rounded-full bg-ivory/10 hover:bg-gold hover:text-registan-dark flex items-center justify-center transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Billing Cycle Toggle (Monthly vs Annual -20%) -->
+        <div id="billing-toggle-bar" class="hidden px-6 py-3 bg-ivory/5 border-b border-ivory/10 flex items-center justify-between">
+            <span class="text-xs text-ivory/80 font-medium">To'lov davri:</span>
+            <div class="inline-flex rounded-full bg-black/40 p-1 border border-ivory/15">
+                <button type="button" id="bill-monthly-btn" onclick="setBillingCycle('monthly')" class="px-3 py-1 rounded-full text-xs font-bold bg-gold text-registan-dark transition-all">
+                    Oylik
+                </button>
+                <button type="button" id="bill-annual-btn" onclick="setBillingCycle('annual')" class="px-3 py-1 rounded-full text-xs font-semibold text-ivory/75 hover:text-ivory transition-all">
+                    Yillik (-20%)
+                </button>
+            </div>
+        </div>
+
+        <!-- Drawer Scroll Area -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            <div id="cart-items-container" class="space-y-4">
+                <!-- Cart Items Injected by JS -->
+            </div>
+
+            <!-- Connection Request Form -->
+            <form id="checkout-form" onsubmit="submitConnectionOrder(event)" class="hidden pt-6 border-t border-ivory/15 space-y-4">
+                <h4 class="font-serif text-xl font-semibold text-gold-light">Tizimni ulash uchun ariza</h4>
+                
+                <div>
+                    <label class="block text-xs text-ivory/75 mb-1.5">Mehmon uyi nomi *</label>
+                    <input type="text" id="gh-name" required placeholder="Masalan: Registan Boutique Guest House" class="w-full px-4 py-3 rounded-xl bg-ivory/5 border border-ivory/15 focus:border-gold focus:outline-none text-sm text-ivory placeholder-ivory/35">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-ivory/75 mb-1.5">Shahar / Hudud *</label>
+                        <select id="gh-city" class="w-full px-3.5 py-3 rounded-xl bg-[#0D213A] border border-ivory/15 focus:border-gold focus:outline-none text-sm text-ivory">
+                            <option value="Samarqand">Samarqand</option>
+                            <option value="Buxoro">Buxoro</option>
+                            <option value="Xiva">Xiva</option>
+                            <option value="Toshkent">Toshkent</option>
+                            <option value="Bo'stonliq / Chimyon">Bo'stonliq / Chimyon</option>
+                            <option value="Boshqa hudud">Boshqa hudud</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-ivory/75 mb-1.5">Telefon raqamingiz *</label>
+                        <input type="tel" id="gh-phone" required value="+998 " placeholder="+998 90 123 45 67" class="w-full px-3.5 py-3 rounded-xl bg-ivory/5 border border-ivory/15 focus:border-gold focus:outline-none text-sm text-ivory placeholder-ivory/35">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-ivory/75 mb-2">To'lov va ulanish usuli</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="payment" value="Click" checked class="peer sr-only">
+                            <div class="py-2.5 px-2 rounded-xl border border-ivory/15 bg-ivory/5 text-center text-xs font-semibold peer-checked:bg-gold peer-checked:text-registan-dark peer-checked:border-gold transition-all">
+                                Click
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="payment" value="Payme" class="peer sr-only">
+                            <div class="py-2.5 px-2 rounded-xl border border-ivory/15 bg-ivory/5 text-center text-xs font-semibold peer-checked:bg-gold peer-checked:text-registan-dark peer-checked:border-gold transition-all">
+                                Payme
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="payment" value="Shartnoma / Hisob-raqam" class="peer sr-only">
+                            <div class="py-2.5 px-2 rounded-xl border border-ivory/15 bg-ivory/5 text-center text-[11px] font-semibold peer-checked:bg-gold peer-checked:text-registan-dark peer-checked:border-gold transition-all">
+                                Shartnoma
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-full bg-gradient-to-r from-gold-light via-gold to-gold-dark text-registan-dark font-bold text-sm tracking-wide shadow-lg shadow-gold/25 hover:shadow-gold/45 transition-all">
+                    Ulanishni tasdiqlash
+                </button>
+            </form>
+
+            <!-- Instant Confirmation Screen -->
+            <div id="order-success-box" class="hidden py-8 text-center space-y-4">
+                <div class="w-16 h-16 rounded-full bg-gold/20 border border-gold text-gold-light mx-auto flex items-center justify-center animate-bounce">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <span id="order-id-badge" class="inline-block px-3 py-1 rounded-full bg-ivory/10 text-xs font-mono text-gold-light"></span>
+                <h4 class="font-serif text-3xl font-semibold text-ivory">Arizangiz qabul qilindi!</h4>
+                <p id="order-summary-msg" class="text-sm text-ivory/80 leading-relaxed"></p>
+                <button onclick="resetAfterOrder()" class="mt-4 px-6 py-3 rounded-full luxury-glass-light hover:bg-gold hover:text-registan-dark text-xs uppercase tracking-widest font-semibold transition-all">
+                    Bosh sahifaga qaytish
+                </button>
+            </div>
+        </div>
+
+        <!-- Drawer Footer Subtotal -->
+        <div id="cart-footer" class="hidden px-6 py-5 border-t border-ivory/10 bg-black/50">
+            <div class="flex items-center justify-between text-xs text-ivory/70 mb-1">
+                <span>O'rnatish va xodimlarni o'qitish:</span>
+                <span class="text-emerald-400 font-semibold">Bepul (1 kun ichida)</span>
+            </div>
+            <div class="flex items-center justify-between text-lg font-bold text-ivory">
+                <span id="cart-total-label">Oylik to'lov:</span>
+                <span id="cart-total-price" class="font-serif text-2xl text-gold-light">0 so'm</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-500 pointer-events-none">
+        <div class="luxury-glass px-5 py-3.5 rounded-2xl border border-gold/40 flex items-center gap-3 shadow-2xl">
+            <span class="w-2.5 h-2.5 rounded-full bg-gold"></span>
+            <p id="toast-message" class="text-xs sm:text-sm font-medium text-ivory"></p>
+        </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- APPLICATION LOGIC & BESPOKE 3D ARCHITECTURAL UI SVG ENGINE            -->
+    <!-- ===================================================================== -->
+    <script>
+        /**
+         * 1. MODULES & SCROLL STORYTELLING DATA
+         */
+        const ROOM_TIERS = {
+            small: { label: 'Kichik (1-8 xona)', multiplier: 1.0 },
+            medium: { label: "O'rta (9-20 xona)", multiplier: 1.45 },
+            large: { label: 'Katta (21+ xona)', multiplier: 2.1 }
+        };
+
+        const AUTOMATION_MODULES = [
+            {
+                id: 'ai-concierge',
+                storyIndex: 0,
+                category: 'booking',
+                badge: "01 / TO'G'RIDAN-TO'G'RI BRON",
+                tag: 'AI KONSYERJ & SAYT',
+                name: "Komissiyasiz bron va 24/7 AI javob",
+                subtitle: "Telegram, WhatsApp va veb-sayt orqali aqlli bronlash",
+                basePrice: 390000,
+                metric: "+42% to'g'ridan-to'g'ri bron",
+                description: "Xorijiy va mahalliy sayyohlar savollariga O'zbek, Rus va Ingliz tillarida 2 soniyada javob beruvchi, bo'sh xonalarni ko'rsatib Click/Payme orqali oldindan to'lov qabul qiluvchi sun'iy intellekt.",
+                features: [
+                    "O'zbek, Rus, Ingliz va Fransuz tillarida 24/7 AI muloqot",
+                    "Booking.com komissiyasisiz (0%) shaxsiy bron vidjeti",
+                    "Click, Payme va Visa/Mastercard avtomatik to'lov"
+                ],
+                theme: {
+                    bgPrimary: '#134074',
+                    bgSecondary: '#061324',
+                    aura: 'rgba(244, 180, 26, 0.42)',
+                    accent: '#F4B41A',
+                    secondary: '#38BDF8',
+                    visualType: 'concierge'
+                }
+            },
+            {
+                id: 'emehmon-ocr',
+                storyIndex: 1,
+                category: 'emehmon',
+                badge: "02 / E-MEHMON AVTOMATIKA",
+                tag: 'PASPORT OCR & SOLIQ',
+                name: "1-soniyada E-Mehmon registratsiya",
+                subtitle: "Pasportni kameraga tuting — barcha hujjatlar tayyor",
+                basePrice: 350000,
+                metric: "15 daqiqa → 10 soniya",
+                description: "Mehmon pasportini telefon kamerasi orqali skanerlang: tizim ma'lumotlarni avtomatik o'qib, davlat E-Mehmon bazasiga kiritadi va turistik yig'im kvitansiyasini shakllantiradi.",
+                features: [
+                    "O'zbekiston va 190+ davlat pasportlarini 99.8% aniqlikda o'qish",
+                    "E-Mehmon davlat tizimiga bir tugma bilan integratsiya",
+                    "Turistik yig'im va hisobotlarni avtomatik hisoblash"
+                ],
+                theme: {
+                    bgPrimary: '#0F5C58',
+                    bgSecondary: '#051E1D',
+                    aura: 'rgba(52, 211, 153, 0.38)',
+                    accent: '#34D399',
+                    secondary: '#FFD166',
+                    visualType: 'emehmon'
+                }
+            },
+            {
+                id: 'channel-manager',
+                storyIndex: 2,
+                category: 'booking',
+                badge: "03 / CHANNEL MANAGER",
+                tag: 'OTA SINXRONIZATSIYA',
+                name: "Yagona kanal boshqaruvi",
+                subtitle: "Booking.com, Airbnb, Instagram va Telegram bitta oynada",
+                basePrice: 490000,
+                metric: "0% overbooking xatosi",
+                description: "Barcha xalqaro va mahalliy platformalardagi xona bandligi real vaqt rejimida yangilanadi. Bir joyda xona band qilinsa, qolgan barcha kanallarda avtomatik yopiladi.",
+                features: [
+                    "Booking.com, Airbnb, Expedia va Ostrovok bilan 2-tomonlama sinxron",
+                    "Mavsumiy va bayram narxlarini barcha saytlarda bir zumda o'zgartirish",
+                    "Bitta xonaga ikki kishini yozib qo'yish (overbooking)ni to'liq bartaraf etish"
+                ],
+                theme: {
+                    bgPrimary: '#8F1D24',
+                    bgSecondary: '#1E0608',
+                    aura: 'rgba(244, 180, 26, 0.42)',
+                    accent: '#F4B41A',
+                    secondary: '#FB7185',
+                    visualType: 'channel'
+                }
+            },
+            {
+                id: 'smart-locks-analytics',
+                storyIndex: 3,
+                category: 'full',
+                badge: "04 / AQLLI QULFLAR VA TAHLIL",
+                tag: 'SMART LOCK & DAROMAD',
+                name: "Aqlli qulflar va daromad tahlili",
+                subtitle: "Masofaviy PIN-kodli kirish va moliyaviy boshqaruv",
+                basePrice: 550000,
+                metric: "+38% sof daromad o'sishi",
+                description: "Kechasi uchib kelgan mehmonlar uchun admin kutishiga hojat yo'q — tizim faqat bron muddati davomida ishlovchi maxsus PIN-kodni mehmon Telegramiga yuboradi.",
+                features: [
+                    "Har bir bron uchun vaqtinchalik 6 xonali eshik PIN-kodi generatsiyasi",
+                    "Kunlik tushum, xarajatlar va xodimlar KPI tahlili",
+                    "Tozalash xizmati (Housekeeping) uchun Telegram vazifalar boti"
+                ],
+                theme: {
+                    bgPrimary: '#4A2E1E',
+                    bgSecondary: '#170D08',
+                    aura: 'rgba(244, 180, 26, 0.45)',
+                    accent: '#F4B41A',
+                    secondary: '#FDBA74',
+                    visualType: 'smartlock'
+                }
+            },
+            {
+                id: 'housekeeping-bot',
+                storyIndex: null,
+                category: 'emehmon',
+                badge: "05 / XODIMLAR NAZORATI",
+                tag: 'HOUSEKEEPING BOT',
+                name: "Xona tozalash va servis nazorati",
+                subtitle: "Mehmon chiqishi bilan xodimlar Telegramiga avtomatik topshiriq",
+                basePrice: 250000,
+                metric: "2x tezroq xona tayyorlash",
+                description: "Mehmon check-out qilishi bilanoq xona tozalovchi xodimga Telegram orqali xabar boradi. Foto-hisobot yuklangach xona yana bron uchun ochiladi.",
+                features: [
+                    "Check-out va check-in jadvaliga bog'langan avtomatik vazifalar",
+                    "Mini-bar va jihozlar nazorati foto-hisobot bilan",
+                    "Xodimlar ish samaradorligi reytingi"
+                ],
+                theme: {
+                    bgPrimary: '#0F5C58',
+                    bgSecondary: '#051E1D',
+                    aura: 'rgba(52, 211, 153, 0.35)',
+                    accent: '#34D399',
+                    secondary: '#FFD166',
+                    visualType: 'emehmon'
+                }
+            },
+            {
+                id: 'all-in-one-suite',
+                storyIndex: null,
+                category: 'full',
+                badge: "06 / MAKSIMAL PAKET",
+                tag: 'TO‘LIQ EKOTIZIM',
+                name: "MEHMON OS — All-in-One Komplekt",
+                subtitle: "Barcha 5 ta modul bitta yagona platformada (-30% foyda)",
+                basePrice: 1190000,
+                metric: "To'liq avtopilot boshqaruv",
+                description: "Mehmon uyingizni 100% avtomatlashtirish uchun barcha modullar: AI Konsyerj, E-Mehmon OCR, Channel Manager, Aqlli Qulflar va Moliyaviy tahlil.",
+                features: [
+                    "Barcha modullar cheksiz integratsiya va 24/7 shaxsiy menejer bilan",
+                    "Mehmon uyi uchun eksklyuziv brend veb-sayt sovg'a sifatida",
+                    "Yillik obunada qo'shimcha 20% chegirma"
+                ],
+                theme: {
+                    bgPrimary: '#134074',
+                    bgSecondary: '#061324',
+                    aura: 'rgba(244, 180, 26, 0.48)',
+                    accent: '#F4B41A',
+                    secondary: '#38BDF8',
+                    visualType: 'concierge'
+                }
+            }
+        ];
+
+        /**
+         * 2. BESPOKE HIGH-DETAIL 3D ARCHITECTURAL & UI SVG GENERATOR
+         * Renders rich Uzbek courtyard hospitality + glass UI cards for each stage.
+         */
+        function generateStageSVG(module, uid = '') {
+            const { visualType, accent, secondary } = module.theme;
+            const archGrad = `arch-grad-${module.id}-${uid}`;
+            const cardGrad = `card-grad-${module.id}-${uid}`;
+
+            let stageSpecificContent = '';
+
+            if (visualType === 'concierge') {
+                // Stage 1: Luxury Uzbek Courtyard Arch + 24/7 AI Multilingual Booking Card
+                stageSpecificContent = `
+                    <!-- Samarkand Courtyard Lantern & Arch Illustration -->
+                    <path d="M125 220 C125 135, 210 95, 210 95 C210 95, 295 135, 295 220 Z" fill="url(#${archGrad})" stroke="${accent}" stroke-width="1.5"/>
+                    <!-- Hanging Brass Uzbek Lantern -->
+                    <line x1="210" y1="95" x2="210" y2="128" stroke="${accent}" stroke-width="2"/>
+                    <polygon points="210,126 222,140 218,162 202,162 198,140" fill="${accent}" opacity="0.9"/>
+                    <circle cx="210" cy="146" r="16" fill="${accent}" opacity="0.28"/>
+
+                    <!-- Floating Glass Card 1: Multilingual AI Chat -->
+                    <g transform="translate(36, 178)">
+                        <rect width="235" height="92" rx="18" fill="url(#${cardGrad})" stroke="${accent}" stroke-opacity="0.55" stroke-width="1.4"/>
+                        <circle cx="26" cy="28" r="12" fill="${accent}"/>
+                        <text x="26" y="32" text-anchor="middle" fill="#061324" font-size="10" font-weight="bold">AI</text>
+                        <text x="48" y="25" fill="#FFD166" font-size="9.5" font-weight="600">24/7 AI Konsyerj • 1.8 soniya</text>
+                        <text x="48" y="42" fill="#FDFBF7" font-size="10.5">“Bonjour! Deluxe xona 24-27 May</text>
+                        <text x="48" y="57" fill="#FDFBF7" font-size="10.5">bo'sh. Nonushta kiritilgan ✓”</text>
+                        <rect x="48" y="66" width="96" height="16" rx="8" fill="${accent}" fill-opacity="0.2"/>
+                        <text x="96" y="77" text-anchor="middle" fill="#FFD166" font-size="8.5" font-weight="bold">UZ • RU • EN • FR</text>
+                    </g>
+
+                    <!-- Floating Glass Card 2: Direct Commission-Free Booking -->
+                    <g transform="translate(132, 286)">
+                        <rect width="248" height="96" rx="18" fill="url(#${cardGrad})" stroke="${secondary}" stroke-opacity="0.6" stroke-width="1.4"/>
+                        <rect x="16" y="16" width="10" height="10" rx="5" fill="#34D399"/>
+                        <text x="34" y="25" fill="#34D399" font-size="9.5" font-weight="bold">YANGI TO'G'RIDAN-TO'G'RI BRON</text>
+                        <text x="16" y="48" fill="#FDFBF7" font-size="13" font-weight="bold">Registan Suite • 3 kecha</text>
+                        <text x="16" y="66" fill="#FDFBF7" fill-opacity="0.75" font-size="10.5">To'lov: Click / Visa • 0% komissiya</text>
+                        <rect x="158" y="54" width="76" height="26" rx="13" fill="${accent}"/>
+                        <text x="196" y="71" text-anchor="middle" fill="#061324" font-size="10.5" font-weight="bold">+1 650 000</text>
+                    </g>
+                `;
+            } else if (visualType === 'emehmon') {
+                // Stage 2: 1-Second Passport OCR & E-Mehmon Verified Badge
+                stageSpecificContent = `
+                    <!-- Floating Passport Document Card -->
+                    <g transform="translate(52, 118)">
+                        <rect width="220" height="148" rx="18" fill="url(#${cardGrad})" stroke="${secondary}" stroke-width="1.5"/>
+                        <text x="20" y="26" fill="${secondary}" font-size="9.5" font-weight="bold" letter-spacing="1.5">PASSPORT OCR SCANNER</text>
+                        <!-- Portrait Silhouette -->
+                        <rect x="20" y="40" width="54" height="66" rx="10" fill="rgba(255,255,255,0.08)" stroke="${accent}" stroke-opacity="0.5"/>
+                        <circle cx="47" cy="62" r="11" fill="${accent}" opacity="0.8"/>
+                        <path d="M30 96 C30 82, 64 82, 64 96" fill="${accent}" opacity="0.8"/>
+                        <!-- Extracted MRZ Fields -->
+                        <text x="86" y="54" fill="#FDFBF7" font-size="11" font-weight="bold">ELENA ROSTOVA</text>
+                        <text x="86" y="71" fill="#FDFBF7" fill-opacity="0.7" font-size="9.5">Davlat: Rossiya • № 76 482910</text>
+                        <text x="86" y="88" fill="${accent}" font-size="9.5" font-weight="600">Kelish: 25.11.2026 (3 kun)</text>
+                        <!-- Laser Scan Line -->
+                        <line x1="14" y1="76" x2="206" y2="76" stroke="${accent}" stroke-width="2" stroke-dasharray="4 2"/>
+                        <text x="20" y="130" fill="#FDFBF7" fill-opacity="0.5" font-family="monospace" font-size="8.5">P&lt;RUSROSTOVA&lt;&lt;ELENA&lt;&lt;&lt;&lt;&lt;&lt;76482910</text>
+                    </g>
+
+                    <!-- Floating E-Mehmon Approved Certificate Card -->
+                    <g transform="translate(124, 280)">
+                        <rect width="248" height="104" rx="20" fill="url(#${cardGrad})" stroke="${accent}" stroke-width="1.8"/>
+                        <circle cx="36" cy="40" r="18" fill="${accent}" fill-opacity="0.2" stroke="${accent}" stroke-width="1.5"/>
+                        <path d="M28 40 L34 46 L45 34" fill="none" stroke="${accent}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <text x="64" y="34" fill="${accent}" font-size="10" font-weight="bold">E-MEHMON TASDIQLANDI</text>
+                        <text x="64" y="52" fill="#FDFBF7" font-size="12.5" font-weight="bold">Registratsiya № UZ-98412</text>
+                        <text x="20" y="82" fill="#FDFBF7" fill-opacity="0.8" font-size="10">Turistik yig'im hisoblandi • Vaqt: 1.2 soniya</text>
+                    </g>
+                `;
+            } else if (visualType === 'channel') {
+                // Stage 3: Unified Channel Manager Sync Matrix
+                stageSpecificContent = `
+                    <!-- Central Sync Hub Card -->
+                    <g transform="translate(46, 126)">
+                        <rect width="328" height="248" rx="22" fill="url(#${cardGrad})" stroke="${accent}" stroke-width="1.6"/>
+                        <text x="22" y="30" fill="${accent}" font-size="10" font-weight="bold" letter-spacing="1.5">YAGONA KANAL BOSHQARUVI (LIVE)</text>
+                        
+                        <!-- Channel Pills Row -->
+                        <g transform="translate(22, 46)">
+                            <rect width="88" height="28" rx="14" fill="#003580" stroke="#38BDF8" stroke-width="1"/>
+                            <text x="44" y="18" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="bold">Booking.com</text>
+                            
+                            <rect x="98" width="76" height="28" rx="14" fill="#FF5A5F" fill-opacity="0.25" stroke="#FB7185" stroke-width="1"/>
+                            <text x="136" y="18" text-anchor="middle" fill="#FFE4E6" font-size="9.5" font-weight="bold">Airbnb</text>
+
+                            <rect x="184" width="98" height="28" rx="14" fill="${accent}" fill-opacity="0.2" stroke="${accent}" stroke-width="1"/>
+                            <text x="233" y="18" text-anchor="middle" fill="#FFD166" font-size="9.5" font-weight="bold">Sayt &amp; Bot</text>
+                        </g>
+
+                        <!-- Visual Room Calendar Grid -->
+                        <g transform="translate(22, 92)">
+                            <text x="0" y="12" fill="#FDFBF7" fill-opacity="0.7" font-size="9.5">Xona #101 (Buxoro)</text>
+                            <rect x="112" y="0" width="110" height="20" rx="10" fill="${accent}"/>
+                            <text x="167" y="13" text-anchor="middle" fill="#061324" font-size="9" font-weight="bold">Booking • Band</text>
+
+                            <text x="0" y="44" fill="#FDFBF7" fill-opacity="0.7" font-size="9.5">Xona #102 (Samarqand)</text>
+                            <rect x="148" y="32" width="134" height="20" rx="10" fill="#34D399"/>
+                            <text x="215" y="45" text-anchor="middle" fill="#061324" font-size="9" font-weight="bold">To'g'ridan-to'g'ri • Band</text>
+
+                            <text x="0" y="76" fill="#FDFBF7" fill-opacity="0.7" font-size="9.5">Xona #103 (Xiva VIP)</text>
+                            <rect x="112" y="64" width="82" height="20" rx="10" fill="#FB7185"/>
+                            <text x="153" y="77" text-anchor="middle" fill="#FFFFFF" font-size="9" font-weight="bold">Airbnb • Band</text>
+                        </g>
+
+                        <!-- Bottom Zero Overbooking Status -->
+                        <rect x="22" y="194" width="284" height="36" rx="12" fill="rgba(52, 211, 153, 0.15)" stroke="#34D399" stroke-opacity="0.5"/>
+                        <text x="164" y="216" text-anchor="middle" fill="#6EE7B7" font-size="10.5" font-weight="bold">✓ Barcha kanallar 0.4 soniyada sinxronlandi</text>
+                    </g>
+                `;
+            } else {
+                // Stage 4: Smart Door PIN Lock & Revenue Growth Chart
+                stageSpecificContent = `
+                    <!-- Floating Smart Lock Card -->
+                    <g transform="translate(46, 120)">
+                        <rect width="205" height="145" rx="20" fill="url(#${cardGrad})" stroke="${accent}" stroke-width="1.6"/>
+                        <text x="20" y="28" fill="${accent}" font-size="9.5" font-weight="bold">AQLLI QULF • XONA #04</text>
+                        <rect x="20" y="44" width="165" height="44" rx="12" fill="rgba(0,0,0,0.45)" stroke="${accent}" stroke-opacity="0.5"/>
+                        <text x="102" y="73" text-anchor="middle" fill="#FFD166" font-family="monospace" font-size="22" font-weight="bold" letter-spacing="4">4829#</text>
+                        <text x="20" y="110" fill="#FDFBF7" font-size="10">Avto PIN-kod Telegramga yuborildi</text>
+                        <text x="20" y="126" fill="#34D399" font-size="9.5" font-weight="600">● Eshik qulflangan (Xavfsiz)</text>
+                    </g>
+
+                    <!-- Floating Revenue Analytics Chart Card -->
+                    <g transform="translate(132, 276)">
+                        <rect width="242" height="112" rx="20" fill="url(#${cardGrad})" stroke="${secondary}" stroke-width="1.6"/>
+                        <text x="18" y="26" fill="${secondary}" font-size="9.5" font-weight="bold">OYLIK SOF DAROMAD O'SISHI</text>
+                        <text x="18" y="48" fill="#FDFBF7" font-size="16" font-weight="bold">+42.8% O'sish</text>
+                        <!-- Rising Gold Bars -->
+                        <rect x="22" y="82" width="22" height="16" rx="4" fill="${accent}" opacity="0.35"/>
+                        <rect x="54" y="72" width="22" height="26" rx="4" fill="${accent}" opacity="0.55"/>
+                        <rect x="86" y="60" width="22" height="38" rx="4" fill="${accent}" opacity="0.75"/>
+                        <rect x="118" y="46" width="22" height="52" rx="4" fill="${accent}"/>
+                        <rect x="150" y="34" width="22" height="64" rx="4" fill="#34D399"/>
+                        <text x="184" y="85" fill="#6EE7B7" font-size="10" font-weight="bold">94% Bandlik</text>
+                    </g>
+                `;
+            }
+
+            return `
+            <svg viewBox="0 0 420 460" class="w-full h-full overflow-visible select-none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="${archGrad}" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="${accent}" stop-opacity="0.22"/>
+                        <stop offset="100%" stop-color="#061324" stop-opacity="0.05"/>
+                    </linearGradient>
+                    <linearGradient id="${cardGrad}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0B1E36" stop-opacity="0.92"/>
+                        <stop offset="100%" stop-color="#050E1A" stop-opacity="0.96"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- Ground Ambient Shadow -->
+                <ellipse cx="210" cy="432" rx="135" ry="14" fill="rgba(0,0,0,0.45)"/>
+
+                <!-- Outer Decorative Uzbek Arch Silhouette -->
+                <path d="M72 405 L72 205 C72 105, 210 38, 210 38 C210 38, 348 105, 348 205 L348 405 Z" 
+                      fill="url(#${archGrad})" stroke="${accent}" stroke-opacity="0.35" stroke-width="1.5"/>
+
+                <!-- Top Geometric Girih Rosette -->
+                <g transform="translate(210, 68)">
+                    <circle r="16" fill="#061324" stroke="${accent}" stroke-width="1.5"/>
+                    <polygon points="0,-10 3,-3 10,0 3,3 0,10 -3,3 -10,0 -3,-3" fill="${accent}"/>
+                </g>
+
+                ${stageSpecificContent}
+            </svg>`;
+        }
+
+        /**
+         * 3. APPLICATION STATE (Room Tiers, Billing Cycle, Shopping Cart)
+         */
+        const selectedRoomTiers = {};
+        AUTOMATION_MODULES.forEach(m => selectedRoomTiers[m.id] = 'small');
+
+        let billingCycle = 'monthly'; // 'monthly' or 'annual' (-20%)
+        let cart = [];
+
+        function formatUZS(amount) {
+            return Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + " so'm";
+        }
+
+        function getModulePrice(moduleId, tierKey = null) {
+            const mod = AUTOMATION_MODULES.find(m => m.id === moduleId);
+            const tier = tierKey || selectedRoomTiers[moduleId] || 'small';
+            const raw = mod.basePrice * ROOM_TIERS[tier].multiplier;
+            return Math.round(raw / 10000) * 10000;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3200);
+        }
+
+        /**
+         * 4. INITIALIZE HERO, SCROLL STORYTELLING, CATALOG & ROI CALCULATOR
+         */
+        function initApp() {
+            // Render Hero Centerpiece
+            document.getElementById('hero-centerpiece-svg').innerHTML = generateStageSVG(AUTOMATION_MODULES[0], 'hero');
+
+            // Render Sticky Scroll Stage Visuals (Chapters 0-3)
+            const storyModules = AUTOMATION_MODULES.slice(0, 4);
+            storyModules.forEach((mod, idx) => {
+                const el = document.getElementById(`stage-visual-${idx}`);
+                if (el) {
+                    el.innerHTML = `<div class="w-[92%] h-[92%] drop-shadow-[0_32px_50px_rgba(0,0,0,0.68)]">${generateStageSVG(mod, 'sticky')}</div>`;
+                }
+            });
+
+            // Render 4 Scroll Storytelling Chapters
+            const storyContainer = document.getElementById('story-sections-container');
+            storyContainer.innerHTML = storyModules.map((mod, idx) => `
+                <article id="story-sec-${idx}" data-story-index="${idx}" class="story-section min-h-[85vh] lg:min-h-screen flex items-center py-10 ${idx === 0 ? 'is-active' : ''}">
+                    <div class="story-content w-full luxury-glass rounded-3xl p-7 sm:p-10 space-y-6">
+                        
+                        <!-- Mobile-Only Centerpiece Visual -->
+                        <div class="lg:hidden w-64 sm:w-72 mx-auto my-2 drop-shadow-2xl">
+                            ${generateStageSVG(mod, 'mob')}
+                        </div>
+
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="text-[11px] uppercase tracking-[0.26em] text-gold-light font-semibold">${mod.badge}</span>
+                            <span class="px-3 py-1 rounded-full bg-ivory/10 text-xs font-semibold text-gold-light">${mod.metric}</span>
+                        </div>
+
+                        <div>
+                            <h2 class="font-serif text-3xl sm:text-5xl font-semibold text-ivory leading-tight">${mod.name}</h2>
+                            <p class="text-sm sm:text-base text-gold-light/90 font-medium mt-1.5">${mod.subtitle}</p>
+                        </div>
+
+                        <p class="text-sm sm:text-base text-ivory/80 leading-relaxed font-light">
+                            ${mod.description}
+                        </p>
+
+                        <!-- Bullet Highlights -->
+                        <ul class="space-y-2 text-xs sm:text-sm text-ivory/85 border-t border-ivory/10 pt-4">
+                            ${mod.features.map(f => `
+                                <li class="flex items-start gap-2.5">
+                                    <span class="text-gold-light font-bold mt-0.5">✓</span>
+                                    <span>${f}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+
+                        <!-- Price & Action Buttons -->
+                        <div class="pt-4 border-t border-ivory/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <span class="text-[11px] uppercase tracking-wider text-ivory/60 block">Boshlang'ich tarif</span>
+                                <span class="font-serif text-2xl sm:text-3xl font-bold text-gold-light">${formatUZS(mod.basePrice)} <span class="text-xs font-sans font-normal text-ivory/65">/ oy</span></span>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <button type="button" onclick="openPreviewModal('${mod.id}')" class="px-5 py-3.5 rounded-full luxury-glass-light hover:bg-ivory/15 text-ivory text-xs sm:text-sm font-medium transition-all">
+                                    Batafsil ko'rish
+                                </button>
+                                <button type="button" onclick="addToCart('${mod.id}')" class="px-6 py-3.5 rounded-full bg-gradient-to-r from-gold-light via-gold to-gold-dark text-registan-dark font-bold text-xs sm:text-sm shadow-lg shadow-gold/25 hover:shadow-gold/45 hover:-translate-y-0.5 transition-all">
+                                    Paketga qo'shish
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+
+            renderCatalog('all');
+            calculateROI();
+            setupScrollStoryObserver();
+            setup3DTilt('hero-tilt-zone', 'hero-tilt-card');
+            setup3DTilt('sticky-tilt-zone', 'sticky-tilt-card');
+            initGirihParticles();
+        }
+
+        function renderCatalog(filter) {
+            const grid = document.getElementById('catalog-grid');
+            const items = filter === 'all' ? AUTOMATION_MODULES : AUTOMATION_MODULES.filter(m => m.category === filter);
+
+            grid.innerHTML = items.map(mod => {
+                const currentPrice = getModulePrice(mod.id);
+                return `
+                <div class="luxury-glass rounded-3xl p-6 flex flex-col justify-between group hover:border-gold/45 transition-all duration-500 hover:-translate-y-1.5">
+                    <div>
+                        <div class="flex items-center justify-between text-[10px] uppercase tracking-widest text-gold-light mb-3">
+                            <span>${mod.tag}</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-ivory/10 text-ivory/90 font-semibold">${mod.metric}</span>
+                        </div>
+
+                        <!-- Visual Preview Box -->
+                        <div onclick="openPreviewModal('${mod.id}')" class="relative h-56 rounded-2xl bg-gradient-to-b from-white/5 to-black/35 p-3 flex items-center justify-center cursor-pointer overflow-hidden">
+                            <div class="w-48 h-full transform group-hover:scale-105 transition-transform duration-500">
+                                ${generateStageSVG(mod, 'cat')}
+                            </div>
+                        </div>
+
+                        <div class="mt-5 space-y-1.5">
+                            <h3 class="font-serif text-2xl font-semibold text-ivory group-hover:text-gold-light transition-colors">${mod.name}</h3>
+                            <p class="text-xs text-ivory/70 leading-relaxed">${mod.subtitle}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-ivory/10 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-wider text-ivory/55 block">${ROOM_TIERS[selectedRoomTiers[mod.id]].label}</span>
+                                <span id="cat-price-${mod.id}" class="font-serif text-2xl font-bold text-gold-light">${formatUZS(currentPrice)} <span class="text-xs font-sans font-normal text-ivory/60">/ oy</span></span>
+                            </div>
+                            <button type="button" onclick="openPreviewModal('${mod.id}')" class="text-xs text-gold-light underline hover:text-ivory">
+                                Batafsil
+                            </button>
+                        </div>
+
+                        <button type="button" onclick="addToCart('${mod.id}')" class="w-full py-3.5 rounded-full bg-ivory/10 hover:bg-gold hover:text-registan-dark text-ivory font-bold text-xs uppercase tracking-wider transition-all duration-300">
+                            Savatga qo'shish
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Catalog Filter Tabs
+        document.getElementById('catalog-filters').addEventListener('click', (e) => {
+            const btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('bg-gold', 'text-registan-dark', 'font-bold', 'active');
+                b.classList.add('luxury-glass-light', 'text-ivory/85', 'font-medium');
+            });
+            btn.classList.add('bg-gold', 'text-registan-dark', 'font-bold', 'active');
+            btn.classList.remove('luxury-glass-light', 'text-ivory/85', 'font-medium');
+            renderCatalog(btn.dataset.filter);
+        });
+
+        /**
+         * 5. QUICK VIEW MODAL WITH ROOM-TIER PRICING SELECTOR
+         */
+        function openPreviewModal(moduleId) {
+            const mod = AUTOMATION_MODULES.find(m => m.id === moduleId);
+            if (!mod) return;
+
+            document.getElementById('modal-visual-preview').innerHTML = generateStageSVG(mod, 'modal');
+            renderModalDetails(mod);
+
+            const modal = document.getElementById('preview-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function renderModalDetails(mod) {
+            const activeTier = selectedRoomTiers[mod.id] || 'small';
+            const price = getModulePrice(mod.id, activeTier);
+
+            document.getElementById('modal-details-body').innerHTML = `
+                <div>
+                    <span class="text-[11px] uppercase tracking-[0.25em] text-gold-light">${mod.badge}</span>
+                    <h3 class="font-serif text-3xl sm:text-4xl font-semibold text-ivory mt-1">${mod.name}</h3>
+                    <p class="text-sm text-gold-light/90 mt-1">${mod.subtitle}</p>
+                </div>
+
+                <div>
+                    <span class="font-serif text-3xl font-bold text-gold-light">${formatUZS(price)}</span>
+                    <span class="text-xs text-ivory/65"> / oyiga (${ROOM_TIERS[activeTier].label})</span>
+                </div>
+
+                <p class="text-sm text-ivory/80 leading-relaxed">${mod.description}</p>
+
+                <!-- Room Count Tier Selector -->
+                <div>
+                    <span class="text-xs uppercase tracking-wider text-ivory/65 block mb-2">Mehmon uyingiz hajmini tanlang:</span>
+                    <div class="grid grid-cols-3 gap-2">
+                        ${Object.entries(ROOM_TIERS).map(([key, tierObj]) => `
+                            <button type="button" onclick="selectModalRoomTier('${mod.id}', '${key}')"
+                                class="py-2.5 px-2 rounded-xl text-xs font-semibold border transition-all ${activeTier === key ? 'bg-gold text-registan-dark border-gold shadow-md shadow-gold/25' : 'bg-ivory/5 text-ivory/80 border-ivory/15 hover:bg-ivory/15'}">
+                                ${tierObj.label}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Feature Breakdown -->
+                <div class="space-y-2 text-xs text-ivory/85 bg-black/35 p-4 rounded-2xl border border-ivory/10">
+                    <p class="uppercase tracking-wider text-gold-light font-semibold mb-1.5">Modul ichiga kiradi:</p>
+                    ${mod.features.map(f => `<p class="flex items-start gap-2"><span class="text-gold-light font-bold">✓</span><span>${f}</span></p>`).join('')}
+                </div>
+
+                <button type="button" onclick="addToCart('${mod.id}'); closePreviewModal();" class="w-full py-4 rounded-full bg-gradient-to-r from-gold-light via-gold to-gold-dark text-registan-dark font-bold text-sm tracking-wide shadow-lg shadow-gold/25 hover:shadow-gold/45 transition-all">
+                    Savatga qo'shish — ${formatUZS(price)}
+                </button>
+            `;
+        }
+
+        function selectModalRoomTier(moduleId, tierKey) {
+            selectedRoomTiers[moduleId] = tierKey;
+            const mod = AUTOMATION_MODULES.find(m => m.id === moduleId);
+            renderModalDetails(mod);
+            const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+            renderCatalog(activeFilter);
+        }
+
+        function closePreviewModal() {
+            const modal = document.getElementById('preview-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        /**
+         * 6. ROI & TIME-SAVED SIMULATOR LOGIC
+         */
+        function calculateROI() {
+            const rooms = parseInt(document.getElementById('roi-rooms').value, 10);
+            const adr = parseInt(document.getElementById('roi-adr').value, 10);
+            const occ = parseInt(document.getElementById('roi-occ').value, 10);
+
+            document.getElementById('roi-rooms-val').textContent = `${rooms} xona`;
+            document.getElementById('roi-adr-val').textContent = formatUZS(adr);
+            document.getElementById('roi-occ-val').textContent = `${occ}%`;
+
+            // Monthly gross revenue
+            const occupiedRoomNights = rooms * 30 * (occ / 100);
+            const monthlyRevenue = occupiedRoomNights * adr;
+
+            // 15% OTA commission saved on ~65% shifted direct bookings + 12% extra occupancy boost
+            const savedCommission = monthlyRevenue * 0.65 * 0.15;
+            const extraDirectProfit = monthlyRevenue * 0.11;
+            const totalExtraProfit = savedCommission + extraDirectProfit;
+
+            // Saved staff hours (E-Mehmon OCR + AI Concierge)
+            const savedHours = Math.round(rooms * 5.5 + occupiedRoomNights * 0.12);
+
+            document.getElementById('roi-saved-commission').textContent = formatUZS(savedCommission);
+            document.getElementById('roi-saved-hours').textContent = `${savedHours} soat / oy`;
+            document.getElementById('roi-total-profit').textContent = `+${formatUZS(totalExtraProfit)}`;
+        }
+
+        function applyROIPackage() {
+            const rooms = parseInt(document.getElementById('roi-rooms').value, 10);
+            const tier = rooms <= 8 ? 'small' : rooms <= 20 ? 'medium' : 'large';
+            selectedRoomTiers['all-in-one-suite'] = tier;
+            addToCart('all-in-one-suite');
+            toggleCart(true);
+        }
+
+        /**
+         * 7. CART DRAWER, BILLING CYCLE (-20% ANNUAL), & CHECKOUT CONFIRMATION
+         */
+        function addToCart(moduleId) {
+            const mod = AUTOMATION_MODULES.find(m => m.id === moduleId);
+            const tier = selectedRoomTiers[moduleId] || 'small';
+            const monthlyPrice = getModulePrice(moduleId, tier);
+
+            const existing = cart.find(item => item.id === moduleId && item.tier === tier);
+            if (existing) {
+                showToast(`"${mod.name}" allaqachon tanlanganlar ro'yxatida`);
+                return;
+            }
+
+            cart.push({
+                id: mod.id,
+                name: mod.name,
+                tier: tier,
+                tierLabel: ROOM_TIERS[tier].label,
+                monthlyPrice: monthlyPrice
+            });
+
+            updateCartUI();
+            showToast(`"${mod.name}" savatga qo'shildi`);
+        }
+
+        function removeCartItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function setBillingCycle(cycle) {
+            billingCycle = cycle;
+            const mBtn = document.getElementById('bill-monthly-btn');
+            const aBtn = document.getElementById('bill-annual-btn');
+            if (cycle === 'monthly') {
+                mBtn.className = 'px-3 py-1 rounded-full text-xs font-bold bg-gold text-registan-dark transition-all';
+                aBtn.className = 'px-3 py-1 rounded-full text-xs font-semibold text-ivory/75 hover:text-ivory transition-all';
+            } else {
+                aBtn.className = 'px-3 py-1 rounded-full text-xs font-bold bg-gold text-registan-dark transition-all';
+                mBtn.className = 'px-3 py-1 rounded-full text-xs font-semibold text-ivory/75 hover:text-ivory transition-all';
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-badge').textContent = cart.length;
+
+            const container = document.getElementById('cart-items-container');
+            const billingBar = document.getElementById('billing-toggle-bar');
+            const checkoutForm = document.getElementById('checkout-form');
+            const cartFooter = document.getElementById('cart-footer');
+            const successBox = document.getElementById('order-success-box');
+
+            successBox.classList.add('hidden');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="py-14 text-center space-y-4">
+                        <div class="w-16 h-16 rounded-full bg-ivory/5 border border-ivory/10 mx-auto flex items-center justify-center text-ivory/40">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                            </svg>
+                        </div>
+                        <p class="font-serif text-2xl text-ivory/85">Tanlangan modullar yo'q</p>
+                        <p class="text-xs text-ivory/55 max-w-xs mx-auto">Mehmon uyingiz uchun AI Konsyerj, E-Mehmon yoki Channel Manager modullarini tanlang.</p>
+                    </div>
+                `;
+                billingBar.classList.add('hidden');
+                checkoutForm.classList.add('hidden');
+                cartFooter.classList.add('hidden');
+                return;
+            }
+
+            billingBar.classList.remove('hidden');
+            checkoutForm.classList.remove('hidden');
+            cartFooter.classList.remove('hidden');
+
+            const discountMultiplier = billingCycle === 'annual' ? 0.8 : 1.0;
+            const monthlySubtotal = cart.reduce((sum, item) => sum + item.monthlyPrice * discountMultiplier, 0);
+            const finalTotal = billingCycle === 'annual' ? monthlySubtotal * 12 : monthlySubtotal;
+
+            document.getElementById('cart-total-label').textContent = billingCycle === 'annual' ? "Yillik to'lov (-20%):" : "Oylik to'lov:";
+            document.getElementById('cart-total-price').textContent = formatUZS(finalTotal);
+
+            container.innerHTML = cart.map((item, idx) => {
+                const modObj = AUTOMATION_MODULES.find(m => m.id === item.id);
+                const displayPrice = item.monthlyPrice * discountMultiplier;
+                return `
+                <div class="p-4 rounded-2xl bg-ivory/5 border border-ivory/10 flex items-center gap-3.5">
+                    <div class="w-16 h-16 shrink-0">
+                        ${generateStageSVG(modObj, 'cart-' + idx)}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-2">
+                            <h5 class="font-serif text-lg font-semibold text-ivory truncate">${item.name}</h5>
+                            <button onclick="removeCartItem(${idx})" class="text-ivory/40 hover:text-rose-400 transition-colors" title="O'chirish">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-ivory/65 mt-0.5">${item.tierLabel}</p>
+                        <p class="text-xs font-bold text-gold-light mt-1.5">${formatUZS(displayPrice)} / oy</p>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function openDemoQuickCart() {
+            if (cart.length === 0) {
+                addToCart('ai-concierge');
+            }
+            toggleCart(true);
+        }
+
+        function toggleCart(open) {
+            const backdrop = document.getElementById('cart-drawer-backdrop');
+            const drawer = document.getElementById('cart-drawer');
+            if (open) {
+                updateCartUI();
+                backdrop.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    backdrop.classList.remove('opacity-0');
+                    drawer.classList.remove('translate-x-full');
+                });
+            } else {
+                backdrop.classList.add('opacity-0');
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => backdrop.classList.add('hidden'), 320);
+            }
+        }
+
+        function submitConnectionOrder(e) {
+            e.preventDefault();
+            const ghName = document.getElementById('gh-name').value.trim();
+            const ghCity = document.getElementById('gh-city').value;
+            const ghPhone = document.getElementById('gh-phone').value.trim();
+            const payment = document.querySelector('input[name="payment"]:checked').value;
+            const orderId = 'MOS-' + Math.floor(100000 + Math.random() * 900000);
+
+            document.getElementById('cart-items-container').innerHTML = '';
+            document.getElementById('billing-toggle-bar').classList.add('hidden');
+            document.getElementById('checkout-form').classList.add('hidden');
+            document.getElementById('cart-footer').classList.add('hidden');
+
+            const successBox = document.getElementById('order-success-box');
+            document.getElementById('order-id-badge').textContent = `ARIZA RAQAMI: #${orderId}`;
+            document.getElementById('order-summary-msg').innerHTML = `Hurmatli <strong class="text-gold-light">${ghName}</strong> (${ghCity}), tizimni ulash bo'yicha so'rovingiz muvaffaqiyatli qabul qilindi.<br><br>
+                To'lov turi: <span class="text-ivory font-semibold">${payment}</span><br>
+                Shaxsiy integratsiya muhandisimiz 15 daqiqa ichida <span class="text-gold-light font-semibold">${ghPhone}</span> raqamiga bog'lanadi.`;
+
+            successBox.classList.remove('hidden');
+            cart = [];
+            document.getElementById('cart-badge').textContent = '0';
+        }
+
+        function resetAfterOrder() {
+            toggleCart(false);
+            setTimeout(() => updateCartUI(), 400);
+        }
+
+        /**
+         * 8. SCROLL-TRIGGERED COLOR MORPHING & 3D CENTERPIECE OBSERVER
+         */
+        function setupScrollStoryObserver() {
+            const sections = document.querySelectorAll('.story-section');
+            const layers = [0, 1, 2, 3].map(i => document.getElementById(`stage-visual-${i}`));
+            const dots = document.querySelectorAll('.story-dot');
+            const stickyAura = document.getElementById('sticky-aura');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const idx = parseInt(entry.target.dataset.storyIndex, 10);
+                        const mod = AUTOMATION_MODULES[idx];
+
+                        sections.forEach(s => s.classList.remove('is-active'));
+                        entry.target.classList.add('is-active');
+
+                        layers.forEach((layer, lIdx) => {
+                            if (layer) layer.classList.toggle('active', lIdx === idx);
+                        });
+
+                        dots.forEach((dot, dIdx) => {
+                            if (dIdx === idx) {
+                                dot.classList.remove('h-2.5', 'bg-ivory/30');
+                                dot.classList.add('h-8', 'bg-gold');
+                            } else {
+                                dot.classList.remove('h-8', 'bg-gold');
+                                dot.classList.add('h-2.5', 'bg-ivory/30');
+                            }
+                        });
+
+                        document.documentElement.style.setProperty('--bg-primary', mod.theme.bgPrimary);
+                        document.documentElement.style.setProperty('--bg-secondary', mod.theme.bgSecondary);
+                        if (stickyAura) {
+                            stickyAura.style.background = `radial-gradient(circle, ${mod.theme.aura} 0%, transparent 72%)`;
+                        }
+                    }
+                });
+            }, { threshold: 0.48 });
+
+            sections.forEach(sec => observer.observe(sec));
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY < window.innerHeight * 0.45) {
+                    const heroMod = AUTOMATION_MODULES[0];
+                    document.documentElement.style.setProperty('--bg-primary', heroMod.theme.bgPrimary);
+                    document.documentElement.style.setProperty('--bg-secondary', heroMod.theme.bgSecondary);
+                }
+            }, { passive: true });
+        }
+
+        function scrollToStory(idx) {
+            const target = document.getElementById(`story-sec-${idx}`);
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /**
+         * 9. INTERACTIVE 3D MOUSE & TOUCH TILT
+         */
+        function setup3DTilt(zoneId, cardId) {
+            const zone = document.getElementById(zoneId);
+            const card = document.getElementById(cardId);
+            if (!zone || !card) return;
+
+            const handleMove = (clientX, clientY) => {
+                const rect = zone.getBoundingClientRect();
+                const x = (clientX - rect.left) / rect.width - 0.5;
+                const y = (clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = `rotateY(${x * 24}deg) rotateX(${-y * 16}deg) scale(1.03)`;
+            };
+
+            zone.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+            zone.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+            });
+            zone.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            zone.addEventListener('touchend', () => {
+                card.style.transform = 'rotateY(0deg) rotateX(0deg) scale(1)';
+            });
+        }
+
+        /**
+         * 10. AMBIENT GOLDEN GIRIH STARS & SILK DUST CANVAS
+         */
+        function initGirihParticles() {
+            const canvas = document.getElementById('girih-particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = Array.from({ length: 38 }, (_, i) => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 2.5 + 1,
+                speedY: -(Math.random() * 0.4 + 0.12),
+                speedX: (Math.random() - 0.5) * 0.3,
+                alpha: Math.random() * 0.6 + 0.2,
+                isGirihStar: i % 5 === 0,
+                angle: Math.random() * Math.PI * 2
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX + Math.sin(p.angle) * 0.18;
+                    p.angle += 0.012;
+
+                    if (p.y < -20) { p.y = height + 20; p.x = Math.random() * width; }
+                    if (p.x < -20) p.x = width + 20;
+                    if (p.x > width + 20) p.x = -20;
+
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    if (p.isGirihStar) {
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate(p.angle);
+                        ctx.strokeStyle = '#FFD166';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(-4, -4, 8, 8);
+                        ctx.rotate(Math.PI / 4);
+                        ctx.strokeRect(-4, -4, 8, 8);
+                    } else {
+                        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 2.4);
+                        grad.addColorStop(0, '#FDFBF7');
+                        grad.addColorStop(0.5, '#F4B41A');
+                        grad.addColorStop(1, 'transparent');
+                        ctx.fillStyle = grad;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size * 2.4, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
